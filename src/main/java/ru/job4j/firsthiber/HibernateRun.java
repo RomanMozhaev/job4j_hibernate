@@ -1,10 +1,10 @@
-package ru.job4j;
+package ru.job4j.firsthiber;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
-import ru.job4j.models.User;
+import ru.job4j.firsthiber.models.User;
 
 
 import java.util.GregorianCalendar;
@@ -15,7 +15,6 @@ public class HibernateRun {
     public static void main(String[] args) {
         SessionFactory factory = new Configuration().configure().buildSessionFactory();
         Session session = factory.openSession();
-        //create
         session.beginTransaction();
         User user = new User();
         user.setName("Roman");

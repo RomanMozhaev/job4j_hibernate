@@ -1,4 +1,4 @@
-package ru.job4j.models;
+package ru.job4j.firsthiber.models;
 
 import java.util.Calendar;
 
@@ -34,10 +34,8 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", expired=" + expired.getTime().toString() +
-                '}';
+        return "User{"
+                + "id=" + id + ", name='" + name + '\''
+                + ", expired=" + expired.getTime().toString() + '}';
     }
 }

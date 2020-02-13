@@ -6,6 +6,6 @@
         <property name="hibernate.connection.password">password</property>
         <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQL94Dialect</property>
 
-        <mapping resource="ru/job4j/models/User.hbm.xml"/>
+        <mapping resource="ru/job4j/firsthiber/models/User.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>
