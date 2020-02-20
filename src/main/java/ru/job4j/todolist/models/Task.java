@@ -2,6 +2,7 @@ package ru.job4j.todolist.models;
 
 import javax.persistence.*;
 import java.util.Calendar;
+import java.util.Objects;
 
 /**
  * the class of the task.
@@ -65,5 +66,19 @@ public class Task {
 
     public void setDone(boolean done) {
         this.done = done;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return Objects.equals(name, task.name)
+                && Objects.equals(desc, task.desc);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, desc);
     }
 }
