@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        table {
+            table-layout: fixed;
+            width: 100%;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <title>Tasks list</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script>
+        window.onload = function () {
+            var url = "http://localhost:8080/todolist/load";
+            $.ajax({
+                type: "GET",
+                url: url,
+                success: [function ($data) {
+                    createTable($data);
+                }],
+                dataType: 'json'
+            });
+            return false;
+        };
+
+        function createTable($data) {
+            for (var i = 0; i < $data.length; i++) {
+                addRow($data, i)
+            }
+            document.getElementById('all').addEventListener('change', e => {
+                var tbody = document.getElementById('table');
+                if (e.target.checked) {
+                    for (var row of tbody.rows) {
+                        row.hidden = false;
+                    }
+                } else {
+                    var tableRows = tbody.rows;
+                    for (var i = 1; i < tableRows.length; i++) {
+                        var cb = tableRows[i].getElementsByTagName("input")[0];
+                        if (cb.checked) {
+                            tableRows[i].hidden = true;
+                        } else {
+                            tableRows[i].hidden = false;
+                        }
+                    }
+                }
+            });
+        }
+
+        function addRow($data, i) {
+            var id = $data[i]['id'];
+            var tbody = document.getElementById('table');
+            var row = document.createElement("TR");
+            row.setAttribute('id', id);
+            var td1 = document.createElement("TD");
+            var div1 = document.createElement("DIV");
+            div1.setAttribute('id', id + "_name");
+            div1.appendChild(document.createTextNode($data[i]['name']));
+            td1.appendChild(div1);
+            row.appendChild(td1);
+            var td2 = document.createElement("TD");
+            var div2 = document.createElement("DIV");
+            div2.setAttribute('id', id + "_desc");
+            div2.appendChild(document.createTextNode($data[i]['desc']));
+            td2.appendChild(div2);
+            row.appendChild(td2);
+            var td3 = document.createElement("TD");
+            var div3 = document.createElement("DIV");
+            div3.setAttribute('id', id + "_created");
+            div3.appendChild(document.createTextNode($data[i]['created']));
+            td3.appendChild(div3);
+            row.appendChild(td3);
+            var td4 = document.createElement("TD");
+            var div4 = document.createElement("DIV");
+            div4.setAttribute('id', id + "_done");
+            var checkbox = document.createElement('input');
+            checkbox.type = "checkbox";
+            checkbox.id = id + "_cb";
+            if ($data[i]['done']) {
+                checkbox.checked = true;
+                row.hidden = true;
+            }
+            div4.appendChild(checkbox);
+            td4.appendChild(div4);
+            row.appendChild(td4);
+            row.addEventListener('change', e => {
+                if (e.target.checked) {
+                    changeStatus(row.getAttribute('id'), true);
+                    if (!document.getElementById('all').checked) {
+                        row.hidden = true;
+                    }
+                } else {
+                    changeStatus(row.getAttribute('id'), false);
+                    if (!document.getElementById('all').checked) {
+                        row.hidden = false;
+                    }
+                }
+            });
+            tbody.appendChild(row);
+        }
+
+        function changeStatus(id, done) {
+            var changes = {
+                id: id,
+                done: done,
+            };
+            var url = "http://localhost:8080/todolist/change";
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: JSON.stringify(changes),
+                dataType: 'json'
+            });
+            return false;
+
+        }
+
+        function validate() {
+            var name = document.getElementById('name').value;
+            var desc = document.getElementById('desc').value;
+            var massage = "";
+            if (name === "") {
+                massage += "name";
+            }
+            if (desc === "") {
+                if (massage !== "") {
+                    massage += " and ";
+                }
+                massage += "description";
+            }
+            if (massage !== "") {
+                alert("Please enter: " + massage);
+            } else {
+                var task = {
+                    name: name,
+                    desc: desc,
+                };
+                addTask(task);
+            }
+            return false;
+        }
+
+        function addTask(task) {
+            var url = "http://localhost:8080/todolist/add";
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: JSON.stringify(task),
+                success: [function ($data) {
+                    addRow($data, 0);
+                    cleanFields();
+                }],
+                dataType: 'json'
+            });
+            return false;
+        }
+
+        function cleanFields() {
+            document.getElementById('name').value = "";
+            document.getElementById('desc').value = "";
+        }
+    </script>
+</head>
+<body>
+<div class="container" style="background: #ffffff;position: fixed; top: 0px; right: 10px; left: 10px">
+    <table id="modify" class="table">
+        <tr>
+            <td>
+                <label for="name">Task Name : </label>
+                <input type="text" class="form-control" name="name" id="name">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="desc">Description : </label>
+                <textarea rows="2" class="form-control" name="desc" id="desc"></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button type="submit" onclick="validate()" class="form-control">add new task</button>
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="container" style="margin-top:16%">
+    <table id="table" class="table">
+        <h2>TODO list</h2>
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Date</th>
+            <th>
+                <label for="all"> All Task</label>
+                <input type="checkbox" id="all" name="all" value="all">
+            </th>
+        </tr>
+        </thead>
+    </table>
+</div>
+</body>
+</html>
