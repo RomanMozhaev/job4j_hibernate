@@ -2,10 +2,9 @@ package ru.job4j.todolist.connectors;
 
 import ru.job4j.todolist.models.Task;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * the class for connecting to the data base.
@@ -27,12 +26,12 @@ public class DataBaseConnector implements Connector {
     /**
      * the entity manager.
      */
-    private EntityManager em = Persistence
-            .createEntityManagerFactory("Tasks")
-            .createEntityManager();
+    private final EntityManagerFactory emf = Persistence
+            .createEntityManagerFactory("Tasks");
 
     /**
      * the instance getter
+     *
      * @return instance
      */
     public static DataBaseConnector getInstance() {
@@ -41,35 +40,60 @@ public class DataBaseConnector implements Connector {
 
     /**
      * the method for getting all rows from the data base.
+     *
      * @return the list of the tasks
      */
     public List<Task> getAll() {
-        TypedQuery<Task> query = em.createNamedQuery("Task.getAll", Task.class);
-        return query.getResultList();
+        return this.tx(em -> {
+            TypedQuery<Task> query = em.createNamedQuery("Task.getAll", Task.class);
+            return query.getResultList();
+        });
     }
 
     /**
      * the method for changing status of the task.
+     *
      * @param task the task with required changes.
      */
     public void changeStatus(Task task) {
-        em.getTransaction().begin();
-        Task existingTask = em.find(Task.class, task.getId());
-        existingTask.setDone(task.isDone());
-        em.merge(existingTask);
-        em.getTransaction().commit();
+        this.tx(em -> {
+            Task existingTask = em.find(Task.class, task.getId());
+            existingTask.setDone(task.isDone());
+            em.merge(existingTask);
+            return existingTask;
+        });
     }
 
     /**
      * the method for adding the new task to the data base.
+     *
      * @param task - the new task
      * @return - the task with its id in the data base.
      */
     public Task addTask(Task task) {
-        em.getTransaction().begin();
-        Task newTask = em.merge(task);
-        em.getTransaction().commit();
-        return newTask;
+        return this.tx(em -> em.merge(task));
     }
 
+    /**
+     * the wrapper.
+     *
+     * @param command - the hibernate command
+     * @param <T>     - the type of the returning value
+     * @return
+     */
+    private <T> T tx(final Function<EntityManager, T> command) {
+        final EntityManager em = this.emf.createEntityManager();
+        final EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            T result = command.apply(em);
+            tx.commit();
+            return result;
+        } catch (final Exception e) {
+            tx.rollback();
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
 }
