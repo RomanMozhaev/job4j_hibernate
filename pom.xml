@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>ru.job4j_hibernate</groupId>
     <artifactId>job4j_hibernate</artifactId>
-    <packaging>war</packaging>
+    <packaging>pom</packaging>
     <version>2.0</version>
     <name>job4j_hibernate</name>
 
@@ -141,4 +141,10 @@
         </dependency>
 
     </dependencies>
+
+    <modules>
+        <module>todolist</module>
+        <module>cars</module>
+    </modules>
+    
 </project>
