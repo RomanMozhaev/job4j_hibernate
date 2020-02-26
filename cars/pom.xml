@@ -9,9 +9,6 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>cars</artifactId>
-    <packaging>war</packaging>
-    <dependencies>
+    <packaging>jar</packaging>
 
-    </dependencies>
-   
 </project>
