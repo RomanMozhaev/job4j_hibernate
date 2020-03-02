@@ -153,6 +153,7 @@
     <modules>
         <module>todolist</module>
         <module>cars</module>
+        <module>carsalesplatform</module>
     </modules>
     
 </project>

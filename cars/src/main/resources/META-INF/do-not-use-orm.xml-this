@@ -1,0 +1,58 @@
+<entity-mappings
+        version="2.1"
+        xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm
+        http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
+    <persistence-unit-metadata>
+        <xml-mapping-metadata-complete/>
+        <persistence-unit-defaults>
+            <delimited-identifiers/>
+        </persistence-unit-defaults>
+    </persistence-unit-metadata>
+    <package>ru.job4j.cars.modelsxml</package>
+    <access>FIELD</access>
+    <entity class="ru.job4j.cars.modelsxml.EngineXml">
+        <table name="enginexml"/>
+        <attributes>
+            <id name="id">
+                <generated-value strategy="AUTO"/>
+            </id>
+            <basic name="model">
+                <column nullable="false" unique="true"/>
+            </basic>
+        </attributes>
+    </entity>
+    <entity class="CarXml">
+        <table name="carxml"/>
+        <attributes>
+            <id name="id">
+                <generated-value strategy="AUTO"/>
+            </id>
+            <basic name="model">
+                <column nullable="false" unique="true"/>
+            </basic>
+            <many-to-one name="engine" fetch="LAZY" target-entity="EngineXml">
+                <join-column name="engine_id"/>
+            </many-to-one>
+            <many-to-many name="drivers" mapped-by="cars"/>
+        </attributes>
+    </entity>
+    <entity class="ru.job4j.cars.modelsxml.DriverXml">
+        <table name="driverxml"/>
+        <attributes>
+            <id name="id">
+                <generated-value strategy="AUTO"/>
+            </id>
+            <basic name="name">
+                <column nullable="false"/>
+            </basic>
+            <many-to-many name="cars">
+                <join-table name="driver_car_xml">
+                    <join-column name="driver_id"/>
+                    <inverse-join-column name="car_id"/>
+                </join-table>
+            </many-to-many>
+        </attributes>
+    </entity>
+</entity-mappings>
