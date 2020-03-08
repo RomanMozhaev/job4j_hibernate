@@ -9,7 +9,7 @@ public interface ConnectionInterface {
 
     int addUser(User user);
 
-    boolean addCar(Car car);
+    int addCar(Car car);
 
     List<Car> carsByUser(User user);
 

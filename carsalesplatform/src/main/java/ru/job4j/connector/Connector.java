@@ -130,15 +130,15 @@ public class Connector implements ConnectionInterface {
      * @return true if added; otherwise false.
      */
     @Override
-    public boolean addCar(Car car) {
-        boolean result = false;
+    public int addCar(Car car) {
+        int result = -1;
         EntityManager em = emf.createEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
             em.persist(car);
             tx.commit();
-            result = true;
+            result = car.getId();
         } catch (Exception e) {
             tx.rollback();
         } finally {

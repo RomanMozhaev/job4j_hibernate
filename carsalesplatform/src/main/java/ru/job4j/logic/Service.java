@@ -106,7 +106,7 @@ public class Service implements ServiceInterface {
      */
     @Override
     public boolean addCar(Car car) {
-        return this.connector.addCar(car);
+        return this.connector.addCar(car) != -1;
     }
 
     /**

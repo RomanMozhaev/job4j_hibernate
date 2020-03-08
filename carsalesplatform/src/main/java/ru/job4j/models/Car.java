@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Objects;
 
 /**
  * the model of the offer for car selling.
@@ -177,5 +178,39 @@ public class Car {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Calendar getDate() {
+        return date;
+    }
+
+    public void setDate(Calendar date) {
+        this.date = date;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Car car = (Car) o;
+        return usage == car.usage
+                && year == car.year
+                && price == car.price
+                && sold == car.sold
+                && Objects.equals(type, car.type)
+                && Objects.equals(brand, car.brand)
+                && Objects.equals(model, car.model)
+                && Objects.equals(description, car.description)
+                && Objects.equals(picture, car.picture)
+                && Objects.equals(date, car.date);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type, brand, model, usage, year, description, price, picture, date, sold);
     }
 }
