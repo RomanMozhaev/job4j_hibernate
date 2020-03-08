@@ -1,11 +1,11 @@
- package ru.job4j.connector;
+package ru.job4j.connector;
 
 import ru.job4j.models.Car;
 import ru.job4j.models.User;
 
 import java.util.List;
 
- public interface ConnectionInterface {
+public interface ConnectionInterface {
 
     int addUser(User user);
 
@@ -18,5 +18,9 @@ import java.util.List;
     User isCredential(User user);
 
     boolean changeStatus(Car car);
+
+    List<String> allBrands();
+
+    List<Car> filter(boolean day, boolean photo, String brand);
 
 }

@@ -1,10 +1,18 @@
 package ru.job4j.connector;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import ru.job4j.models.Car;
 import ru.job4j.models.User;
 
 import javax.persistence.*;
+import java.beans.PropertyEditorSupport;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * the class for connecting to Data Base.
@@ -30,6 +38,7 @@ public class Connector implements ConnectionInterface {
 
     /**
      * the getter for singleton.
+     *
      * @return the instance.
      */
     public static Connector getInstance() {
@@ -38,6 +47,7 @@ public class Connector implements ConnectionInterface {
 
     /**
      * adds the new user to the database.
+     *
      * @param user - the new user.
      * @return the unique user's id.
      */
@@ -61,6 +71,7 @@ public class Connector implements ConnectionInterface {
 
     /**
      * checks the credential for the sign in
+     *
      * @param user - includes name and password for checking.
      * @return - User if found; otherwise null.
      */
@@ -86,6 +97,7 @@ public class Connector implements ConnectionInterface {
 
     /**
      * changes the status of the offer for selling.
+     *
      * @param car - contains id and new status of the offer.
      * @return - true if changed; otherwise false.
      */
@@ -113,6 +125,7 @@ public class Connector implements ConnectionInterface {
 
     /**
      * adds the new offer for car selling.
+     *
      * @param car - new car for selling
      * @return true if added; otherwise false.
      */
@@ -136,6 +149,7 @@ public class Connector implements ConnectionInterface {
 
     /**
      * returns the list of the offers tied to the user.
+     *
      * @param user the user which added offers.
      * @return the list of the offers.
      */
@@ -160,6 +174,7 @@ public class Connector implements ConnectionInterface {
 
     /**
      * returns all offers.
+     *
      * @return the list of all offers.
      */
     @Override
@@ -180,6 +195,88 @@ public class Connector implements ConnectionInterface {
         return cars;
     }
 
+    /**
+     * returns all brands of cars which were added to the data base.
+     *
+     * @return the list of brands.
+     */
+    @Override
+    public List<String> allBrands() {
+        EntityManager em = this.emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        List<String> brands = null;
+        try {
+            tx.begin();
+            Query q = em.createQuery("select distinct c.brand From Car c");
+            brands = q.getResultList();
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+        } finally {
+            em.close();
+        }
+        return brands;
+    }
 
+    /**
+     * returns the list of cars after filters terms.
+     *
+     * @param day   - tickets for the current day only.
+     * @param photo - tickets with photos only.
+     * @param brand - tickets of the required car brand.
+     * @return the list of the cars.
+     */
+    public List<Car> filter(boolean day, boolean photo, String brand) {
+        EntityManager em = this.emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        List<Car> list = null;
+        try {
+            tx.begin();
+            StringBuilder query = new StringBuilder("select c From Car c");
+            boolean where = false;
+            if (!brand.equals("none")) {
+                query.append(" where c.brand =:carBrand");
+                where = true;
+            }
+            if (photo) {
+                if (where) {
+                    query.append(" and");
+                } else {
+                    query.append(" where");
+                    where = true;
+                }
+                query.append(" c.picture != ''");
+            }
+            if (day) {
+                if (where) {
+                    query.append(" and");
+                } else {
+                    query.append(" where");
+                }
 
+                query.append(" c.date >:today");
+            }
+
+            String qqq = query.toString();
+            Query q = em.createQuery(qqq);
+            if (!brand.equals("none")) {
+                q.setParameter("carBrand", brand);
+            }
+            if (day) {
+                Calendar now = new GregorianCalendar();
+                q.setParameter("today", new GregorianCalendar(
+                        now.get(Calendar.YEAR),
+                        now.get(Calendar.MONTH),
+                        now.get(Calendar.DATE)
+                ));
+            }
+            list = q.getResultList();
+            tx.commit();
+        } catch (Exception e) {
+            tx.rollback();
+        } finally {
+            em.close();
+        }
+        return list;
+    }
 }

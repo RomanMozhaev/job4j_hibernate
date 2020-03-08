@@ -29,6 +29,15 @@
             }
             return result;
         }
+
+        function filter() {
+            var day = document.getElementById("day").checked;
+            var photo = document.getElementById("photo").checked;
+            var brand = document.getElementById("brand").value;
+            var url = "${pageContext.servletContext.contextPath}/filter?day="
+                + day + "&photo=" + photo + "&brand=" + brand;
+            document.location.href = url;
+        }
     </script>
 
 </head>
@@ -36,12 +45,51 @@
 <div class="container">
     <table id="head" class="table">
         <tr>
-            <td>
+            <td width="50%">
                 <button class="form-control" onclick="registration()">Registration</button>
             </td>
-            <td>
+            <td width="50%">
                 <button class="form-control" onclick="login()"><c:out value="${name}"></c:out></button>
             </td>
+        </tr>
+    </table>
+
+    <table id="filter" class="table">
+        <tr>
+            <div>
+                <label for="day">Last Day: </label>
+                <input type="checkbox" id="day" name="day" value="day">
+                <script type='text/javascript'>
+                    document.getElementById("day").checked = ${day};
+                </script>
+            </div>
+        </tr>
+        <tr>
+            <div>
+                <label for="photo">With Photo only: </label>
+                <input type="checkbox" id="photo" name="photo" value="photo">
+                <script type='text/javascript'>
+                    document.getElementById("photo").checked = ${photo};
+                </script>
+            </div>
+        </tr>
+        <tr>
+            <div>
+                <select name="brand" class="form-control" id="brand">
+                    <option value="none"></option>
+                    <c:forEach items="${brands}" var="brand">
+                        <option value="${brand}"><c:out value="${brand}"></c:out></option>
+                    </c:forEach>
+                </select>
+                <script type='text/javascript'>
+                    document.getElementById("brand").value = "${setBrand}";
+                </script>
+            </div>
+        </tr>
+        <tr>
+            <button class="form-control" onclick="filter()">Apply Filters</button>
+        </tr>
+
     </table>
 </div>
 <table>

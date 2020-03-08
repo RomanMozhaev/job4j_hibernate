@@ -1,6 +1,9 @@
 package ru.job4j.models;
 
 import javax.persistence.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * the model of the offer for car selling.
@@ -25,7 +28,7 @@ public class Car {
     @Column(nullable = false)
     private String brand;
     /**
-     * car brand.
+     * car model.
      */
     @Column(nullable = false)
     private String model;
@@ -55,6 +58,11 @@ public class Car {
     @Column(nullable = false)
     private String picture;
     /**
+     * the creation date.
+     */
+    @Column(nullable = false)
+    private Calendar date;
+    /**
      * the status of the offer; true if sold;
      */
     @Column(nullable = false)
@@ -78,6 +86,7 @@ public class Car {
         this.description = description;
         this.price = price;
         this.picture = "";
+        this.date = new GregorianCalendar();
         this.sold = false;
         this.user = null;
     }

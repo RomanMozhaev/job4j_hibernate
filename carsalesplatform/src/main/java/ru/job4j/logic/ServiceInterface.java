@@ -13,9 +13,15 @@ public interface ServiceInterface {
 
     List<Car> loadByUser(User user);
 
+    List<Car> filter(boolean day, boolean photo, String model);
+
     int addUser(User user);
 
     boolean addCar(Car car);
 
     boolean changeStatus(Car car);
+
+    List<String> allBrands();
+
+
 }

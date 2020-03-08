@@ -21,7 +21,7 @@ import java.util.HashMap;
  */
 public class AddCarServlet extends HttpServlet {
 
-    private ServiceInterface service = new Service();
+    private ServiceInterface service = Service.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

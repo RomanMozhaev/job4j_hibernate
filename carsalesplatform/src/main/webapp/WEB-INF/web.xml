@@ -85,5 +85,14 @@
         <url-pattern>/change</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>TableFilters</servlet-name>
+        <servlet-class>ru.job4j.servlets.UserFiltersServlet</servlet-class>
+        <load-on-startup>0</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TableFilters</servlet-name>
+        <url-pattern>/filter</url-pattern>
+    </servlet-mapping>
 
 </web-app>
