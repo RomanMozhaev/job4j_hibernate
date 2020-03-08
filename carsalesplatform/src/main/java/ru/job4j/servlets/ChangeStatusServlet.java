@@ -20,7 +20,7 @@ import java.util.HashMap;
  */
 public class ChangeStatusServlet extends HttpServlet {
 
-    private ServiceInterface service = new Service();
+    private ServiceInterface service = Service.getInstance();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

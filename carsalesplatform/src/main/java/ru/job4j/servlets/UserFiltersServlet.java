@@ -13,9 +13,10 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * the servlet for loading the main table for the main page.
+ * the servlet for applying filters to the table.
  */
-public class StartPageServlet extends HttpServlet {
+public class UserFiltersServlet extends HttpServlet {
+
 
     private ServiceInterface service = Service.getInstance();
 
@@ -26,14 +27,25 @@ public class StartPageServlet extends HttpServlet {
         if (name == null) {
             name = "Log In";
         }
-        List<Car> list = this.service.loadTable();
+        boolean day = stringToBoolean(req.getParameter("day"));
+        boolean photo = stringToBoolean(req.getParameter("photo"));
+        String brand = req.getParameter("brand");
+        List<Car> list = this.service.filter(day, photo, brand);
         List<String> brands = this.service.allBrands();
         req.setAttribute("list", list);
         req.setAttribute("name", name);
-        req.setAttribute("day", false);
-        req.setAttribute("photo", false);
-        req.setAttribute("setBrand", "none");
+        req.setAttribute("day", day);
+        req.setAttribute("photo", photo);
+        req.setAttribute("setBrand", brand);
         req.setAttribute("brands", brands);
         this.getServletContext().getRequestDispatcher("/WEB-INF/table.jsp").forward(req, resp);
+    }
+
+    private boolean stringToBoolean(String bool) {
+        boolean result = false;
+        if (bool.equals("true")) {
+            result = true;
+        }
+        return result;
     }
 }

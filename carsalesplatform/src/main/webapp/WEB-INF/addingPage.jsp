@@ -23,13 +23,10 @@
                 || usage === ""
                 || year === ""
                 || desc === ""
-                || pic === undefined
+                // || pic === undefined
                 || price === "") {
                 alert("Please, fill all fields in.");
             } else {
-
-                var formData = new FormData();
-                formData.append("pic", pic);
                 var user = {
                     type: type,
                     brand: brand,
@@ -40,7 +37,13 @@
                     price: price,
                     picPath: ""
                 };
-                loadPicture(formData, user);
+                if (pic !== undefined) {
+                    var formData = new FormData();
+                    formData.append("pic", pic);
+                    loadPicture(formData, user);
+                } else {
+                    response(user);
+                }
             }
             return false;
         }
@@ -127,10 +130,10 @@
         <table class="table">
             <tr>
                 <td>
-                    <input type="submit" class="form-control" onclick="return validate();" value="Add">
+                    <input type="button" class="form-control" onclick="return validate();" value="Add">
                 </td>
                 <td>
-                    <input type="submit" class="form-control" onclick="return toCabinet();" value="return">
+                    <input type="button" class="form-control" onclick="return toCabinet();" value="return">
                 </td>
             </tr>
         </table>

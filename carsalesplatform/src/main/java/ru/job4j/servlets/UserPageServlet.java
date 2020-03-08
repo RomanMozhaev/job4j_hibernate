@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class UserPageServlet extends HttpServlet {
 
-    private ServiceInterface service = new Service();
+    private ServiceInterface service = Service.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
