@@ -130,10 +130,10 @@
         <table class="table">
             <tr>
                 <td>
-                    <input type="submit" class="form-control" onclick="return validate();" value="Add">
+                    <input type="button" class="form-control" onclick="return validate();" value="Add">
                 </td>
                 <td>
-                    <input type="submit" class="form-control" onclick="return toCabinet();" value="return">
+                    <input type="button" class="form-control" onclick="return toCabinet();" value="return">
                 </td>
             </tr>
         </table>

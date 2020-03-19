@@ -3,6 +3,7 @@ package ru.job4j.connector;
 import ru.job4j.models.Car;
 import ru.job4j.models.User;
 
+import java.util.Calendar;
 import java.util.List;
 
 public interface ConnectionInterface {
@@ -21,6 +22,18 @@ public interface ConnectionInterface {
 
     List<String> allBrands();
 
-    List<Car> filter(boolean day, boolean photo, String brand);
+    List<Car> filterCarsByBrandPicDay(String brand, Calendar day);
+
+    List<Car> filterCarsByPicDay(Calendar day);
+
+    List<Car> filterCarsByBrandDay(String brand, Calendar day);
+
+    List<Car> filterCarsByDay(Calendar day);
+
+    List<Car> filterCarsByBrandPic(String brand);
+
+    List<Car> filterCarsByPic();
+
+    List<Car> filterCarsByBrand(String brand);
 
 }

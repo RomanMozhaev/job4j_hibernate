@@ -6,6 +6,8 @@ import ru.job4j.models.Car;
 import ru.job4j.models.User;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -130,7 +132,44 @@ public class Service implements ServiceInterface {
      */
     @Override
     public List<Car> filter(boolean day, boolean photo, String brand) {
-        return this.connector.filter(day, photo, brand);
+        List<Car> result;
+        if (day) {
+            Calendar now = new GregorianCalendar();
+            Calendar calendarDay = new GregorianCalendar(
+                    now.get(Calendar.YEAR),
+                    now.get(Calendar.MONTH),
+                    now.get(Calendar.DATE)
+            );
+            if (photo) {
+                if (!brand.equals("none")) {
+                    result = this.connector.filterCarsByBrandPicDay(brand, calendarDay);
+                } else {
+                    result = this.connector.filterCarsByPicDay(calendarDay);
+                }
+            } else {
+                if (!brand.equals("none")) {
+                    result = this.connector.filterCarsByBrandDay(brand, calendarDay);
+                } else {
+                    result = this.connector.filterCarsByDay(calendarDay);
+                }
+            }
+        } else {
+            if (photo) {
+                if (!brand.equals("none")) {
+                    result = this.connector.filterCarsByBrandPic(brand);
+                } else {
+                    result = this.connector.filterCarsByPic();
+                }
+            } else {
+                if (!brand.equals("none")) {
+                    result = this.connector.filterCarsByBrand(brand);
+                } else {
+                    result = this.connector.allCars();
+                }
+            }
+        }
+
+        return result;
     }
 
     /**
