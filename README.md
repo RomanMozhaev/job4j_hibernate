@@ -1,2 +1,2 @@
 # job4j_hibernate
-The hibernate module 
+The hibernate module. 

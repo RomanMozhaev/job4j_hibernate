@@ -94,12 +94,12 @@ public class Connector implements ConnectionInterface {
      * @return true if added; otherwise false.
      */
     @Override
-    public boolean addCar(Car car) {
-        Object result = transaction(this.emf, em -> {
+    public int addCar(Car car) {
+        Integer result = transaction(this.emf, em -> {
             em.persist(car);
-            return new Object();
+            return car.getId();
         });
-        return result != null;
+        return result != null ? result : -1;
     }
 
     /**

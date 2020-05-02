@@ -1,6 +1,8 @@
 package ru.job4j.connector;
 
 import org.junit.Test;
+import ru.job4j.logic.Service;
+import ru.job4j.logic.ServiceInterface;
 import ru.job4j.models.Car;
 import ru.job4j.models.User;
 import javax.persistence.*;
@@ -10,6 +12,7 @@ import static org.junit.Assert.*;
 public class ConnectorTest {
 
     private final ConnectionInterface connector = Connector.getInstance();
+    private final ServiceInterface service = Service.getInstance();
     private final EntityManagerFactory emf = Persistence
             .createEntityManagerFactory("SaleCar");
 
@@ -153,7 +156,7 @@ public class ConnectorTest {
 
         this.connector.addCar(car);
         this.connector.addCar(car2);
-        List<Car> todayCars = this.connector.filter(true, false, "none");
+        List<Car> todayCars = this.service.filter(true, false, "none");
         List<Car> expected = List.of(car);
         assertEquals(expected, todayCars);
     }
@@ -173,7 +176,7 @@ public class ConnectorTest {
         car2.setPicture("some picture");
         this.connector.addCar(car);
         this.connector.addCar(car2);
-        List<Car> photoCars = this.connector.filter(false, true, "none");
+        List<Car> photoCars = this.service.filter(false, true, "none");
         List<Car> expected = List.of(car2);
         assertEquals(expected, photoCars);
     }
@@ -192,7 +195,7 @@ public class ConnectorTest {
         car2.setUser(user2);
         this.connector.addCar(car);
         this.connector.addCar(car2);
-        List<Car> brandCars = this.connector.filter(false, false, "brand");
+        List<Car> brandCars = this.service.filter(false, false, "brand");
         List<Car> expected = List.of(car);
         assertEquals(expected, brandCars);
     }
@@ -219,7 +222,7 @@ public class ConnectorTest {
         this.connector.addCar(car);
         this.connector.addCar(car2);
         this.connector.addCar(car3);
-        List<Car> cars = this.connector.filter(true, true, "brand2");
+        List<Car> cars = this.service.filter(true, true, "brand2");
         List<Car> expected = List.of(car3);
         assertEquals(expected, cars);
     }
